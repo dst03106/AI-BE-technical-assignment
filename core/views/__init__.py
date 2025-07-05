@@ -1,0 +1,1 @@
+from .talent_experience_view import get_talent_experience
