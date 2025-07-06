@@ -105,7 +105,7 @@ class PgVectorStore(BaseVectorStore):
             )
             self.conn.commit()
 
-    def _drop_table_if_exists(self):
+    def drop_table_if_exists(self):
         with self.conn.cursor() as cur:
             cur.execute(f"DROP TABLE IF EXISTS {self.table_name};")
             self.conn.commit()
@@ -134,19 +134,15 @@ class PgVectorStore(BaseVectorStore):
                 )
             self.conn.commit()
 
-    def search_similar(self, embedding, top_k=5) -> list[RealDictRow]:
+    def search_similar(self, embedding_vector: list[float], top_k=5) -> list[RealDictRow]:
         with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(
                 f"""
-                SELECT id, metadata, embedding <#> %s AS distance
+                SELECT content <#> %s AS distance
                 FROM {self.table_name}
-                ORDER BY embedding <#> %s
+                ORDER BY embedding_vector <#> %s
                 LIMIT %s;
                 """,
-                (embedding, embedding, top_k),
+                (embedding_vector, embedding_vector, top_k),
             )
-        return cur.fetchall()
-
-    def delete_embedding(self, id):
-        # SQL로 삭제
-        pass
+            return cur.fetchall()
