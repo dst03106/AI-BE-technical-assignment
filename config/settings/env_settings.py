@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     llm_model: str
     llm_api_key: str
     embedding_model: str
+    embedding_model_dim: int
 
     # DB
     postgres_host: str = "localhost"
