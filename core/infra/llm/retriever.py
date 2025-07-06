@@ -19,7 +19,7 @@ class BaseVectorRetriever(ABC):
     ):
         super().__init__(*_args, **_kwargs)
         self.vector_store = vector_store
-        self.tok_k = top_k
+        self.top_k = top_k
 
     @abstractmethod
     def retrieve_documents_by_vector_similarity(
@@ -38,9 +38,8 @@ class PgVectorStoreRetriever(BaseVectorRetriever):
         super().__init__(vector_store=PgVectorStore(), **kwargs)
 
     def retrieve_documents_by_vector_similarity(
-        self, query_vector: list[float], k: int = None
+        self, query_vector: list[float], top_k: int = None
     ) -> list[tuple[int, float]]:
-        top_k = k if k is not None else self.k
+        top_k = top_k if top_k is not None else self.top_k
         results = self.vector_store.search_similar(query_vector, top_k=top_k)
-        # [{'content': str}, ...] 형태로 데이터가 전달됨
-        return results
+        return [result.get("content") for result in results]

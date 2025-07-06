@@ -17,6 +17,8 @@ tiktoken = "^0.9.0"
 pytest = "^8.4.1"
 pydantic-settings = "^2.10.1"
 pyyaml = "^6.0.2"
+dynaconf = "^3.2.11"
+jinja2 = "^3.1.6"
 
 
 [build-system]

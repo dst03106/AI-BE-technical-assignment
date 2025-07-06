@@ -20,18 +20,23 @@ class OpenAIHandler(BaseAIHandler):
     def __init__(self):
         self.client = openai.OpenAI(api_key=settings.llm_api_key)
 
-    def chat_completions(self, input_data: dict) -> dict:
+    # TODO : 비동기로 변환
+    def chat_completions(self, messages: list[dict[str, str]]) -> dict:
         try:
             response = self.client.chat.completions.create(
                 model=settings.llm_model,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": "Hi"},
-                ],
+                messages=messages,
             )
             return response.choices[0].message.content
+        except openai.RateLimitError as e:
+            print(f"Rate limit error during LLM inference: {e}")
+            raise
+        except openai.APIError as e:
+            print(f"Error during LLM inference: {e}")
+            raise
         except Exception as e:
-            return f"An error occurred: {e}"
+            print(f"Unknown error during LLM inference: {e}")
+            raise openai.APIError from e
 
     def get_embedding(self, input_text):
         response = self.client.embeddings.create(

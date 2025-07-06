@@ -53,11 +53,6 @@ class BaseVectorStore(ABC):
         """유사도 검색"""
         pass
 
-    @abstractmethod
-    def delete_embedding(self, id: str):
-        """벡터 삭제"""
-        pass
-
 
 class PgVectorStore(BaseVectorStore):
     # TODO : 임베딩 모델마다 다른 차원 수 가져오는 메서드 구현
@@ -138,9 +133,9 @@ class PgVectorStore(BaseVectorStore):
         with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(
                 f"""
-                SELECT content <#> %s AS distance
+                SELECT content, embedding_vector <#> %s::vector AS distance
                 FROM {self.table_name}
-                ORDER BY embedding_vector <#> %s
+                ORDER BY embedding_vector <#> %s::vector
                 LIMIT %s;
                 """,
                 (embedding_vector, embedding_vector, top_k),
