@@ -8,6 +8,10 @@ class Settings(BaseSettings):
     embedding_model: str
     embedding_model_dim: int
 
+    # TalentExperience
+    experience_standard_values: list[str]
+    experience_alias_mapping: dict[str, str]
+
     # DB
     postgres_host: str = "localhost"
     postgres_user: str = "searchright"

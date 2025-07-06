@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from config.settings.prompt_settings import settings
+from config.settings.prompt_settings import settings as prompt_settings
 from core.infra.llm.vector_store import Embedding
 from core.infra.llm.prompt_template import PromptTemplate
 
@@ -23,17 +23,17 @@ def get_talent_experiences(
     output_parser: "BaseOutputParser",
 ):
     user_prompt_variable = {"talent": input_data, "retrieved_docs": []}
-    prompt_template = PromptTemplate(settings.talent_experience_prompt)
+    prompt_template = PromptTemplate(prompt_settings.talent_experience_prompt)
 
     text_chunks = embedding_preprocessor.preprocess(input_data)
-    for text_chunk in text_chunks:
+    for text_chunk in text_chunks:  # TODO: asyncio.gather을 통해 병렬 요청 필요
         embedding_vector = ai_handler.get_embedding(text_chunk)
         retrieved_docs = retriever.retrieve_documents_by_vector_similarity(embedding_vector)
         user_prompt_variable["retrieved_docs"] += retrieved_docs
 
     messages = prompt_template.format(user_prompt_variable)
     prediction = ai_handler.chat_completions(messages)
-    result = output_parser.parse(prediction)
+    result = output_parser.run_postprocesses(prediction)
     return result
 
 
