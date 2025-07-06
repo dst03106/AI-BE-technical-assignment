@@ -1,3 +1,4 @@
+import logging
 from typing import TYPE_CHECKING
 
 from config.settings.prompt_settings import settings as prompt_settings
@@ -13,6 +14,12 @@ if TYPE_CHECKING:
     from core.infra.llm.retriever import BaseVectorRetriever
     from core.infra.llm.output_parser import BaseOutputParser
     from core.models import Company
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def get_talent_experiences(
@@ -57,4 +64,5 @@ def embed_companies(
                     source_id=company.id,
                 )
             )
+        logger.info("Embedding progress...")
     vector_store.add_embeddings(embeddings)
