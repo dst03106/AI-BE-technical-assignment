@@ -22,7 +22,7 @@ class SemanticNormalizer:
             return raw_value
 
         # 2. Alias mapping (e.g. '대기업 경험' → '대규모 회사 경험')
-        if raw_value in self.standard_values:
+        if raw_value in self.alias_mapping:
             return self.alias_mapping[raw_value]
 
         # 3. Fuzzy matching
