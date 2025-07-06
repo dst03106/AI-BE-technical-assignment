@@ -45,7 +45,8 @@ def embed_companies(
 ):
     embeddings = []
     for company in companies:
-        text_chunks = embedding_preprocessor.preprocess(company.data)
+        data = company.data | {"company_news": list(company.company_news.values("title", "news_date"))}
+        text_chunks = embedding_preprocessor.preprocess(data)
         for text_chunk in text_chunks:  # TODO: asyncio.gather을 통해 병렬 요청 필요
             embedding_vector = ai_handler.get_embedding(text_chunk)
             embeddings.append(
