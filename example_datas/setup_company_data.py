@@ -130,8 +130,11 @@ def main():
         # company 테이블 생성
         create_company_table(conn)
 
+        # 현재 파일이 위치한 디렉토리 경로
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        # company_ex*.json 파일을 절대경로로 찾기
         # 회사 데이터 파일 찾기
-        company_files = glob.glob(os.path.join("company_ex*.json"))
+        company_files = glob.glob(os.path.join(BASE_DIR, "company_ex*.json"))
         logger.info(f"{len(company_files)}개의 회사 데이터 파일을 찾았습니다.")
 
         # 데이터 처리 및 삽입
