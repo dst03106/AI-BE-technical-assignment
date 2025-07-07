@@ -32,6 +32,9 @@ flowchart LR
 ```
 
 ## 사전 세팅
+1. `env.example` 파일을 참고하여 `.env` 파일을 생성한 뒤, LLM_API_KEY 값을 입력해주세요.
+    - cf. 현재 OpenAI 모델만 지원하고 있습니다.
+2. 아래 명령어를 순서대로 실행해 주세요:
 ```
 docker-compose up -d
 poetry install
